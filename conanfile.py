@@ -1,5 +1,5 @@
 from conan import ConanFile
-from conan.tools.cmake import CMake
+from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps
 
 class CMakeConan(ConanFile):
 
@@ -12,14 +12,22 @@ class CMakeConan(ConanFile):
     description = "Collection of CMake functions and macros for use in Terminus CMake Projects"
     topics = ("terminus", "cmake", "build")
 
+    settings = "os", "compiler", "build_type", "arch"
+
     def _configure_cmake(self):
         cmake = CMake(self)
-        cmake.definitions["VERSION_FROM_CONANFILE"] = self.version
-        cmake.definitions["NAME_FROM_CONANFILE"] = self.name
-        cmake.definitions["DESC_FROM_CONANFILE"] = self.description
-        cmake.definitions["URL_FROM_CONANFILE"] = self.url
         cmake.configure()
         return cmake
+
+    def generate(self):
+        tc = CMakeToolchain(self)
+        tc.variables["VERSION_FROM_CONANFILE"] = self.version
+        tc.variables["NAME_FROM_CONANFILE"] = self.name
+        tc.variables["DESC_FROM_CONANFILE"] = self.description
+        tc.variables["URL_FROM_CONANFILE"] = self.url
+        tc.generate()
+        deps = CMakeDeps(self)
+        deps.generate()
 
     def build(self):
         cmake = self._configure_cmake()
@@ -28,7 +36,8 @@ class CMakeConan(ConanFile):
     def package(self):
         cmake = self._configure_cmake()
         cmake.install()
+        pass
 
     def package_info(self):
         self.cpp_info.builddirs = ["cmake"]
-        
+

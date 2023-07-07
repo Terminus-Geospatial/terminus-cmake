@@ -1,0 +1,9 @@
+syntax "proto3"
+
+import "education/student.proto"
+import "education/teacher.proto"
+
+message School {
+    repeated Student students = 1;
+    repeated Teacher teachers = 2;
+}

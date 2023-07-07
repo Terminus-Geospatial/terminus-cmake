@@ -167,11 +167,13 @@ log_info '-------------------------------------'
 log_info "Building ${pkg_ref}"
 log_info '-------------------------------------'
 
-cd "${build_root}"
-conanfile="${source_root}/conanfile.py"
+#cd "${build_root}"
+#conanfile="${source_root}/conanfile.py"
+conanfile='conanfile.py'
 
-conan install "${conanfile}" ${build_missing} -s build_type=${build_type} ${options[@]}
+conan install "${conanfile}" ${build_missing} --output-folder build -s build_type=${build_type} ${options[@]}
 
+conan build --output-folder build .
 #conan export-pkg "$conanfile" $channel
 
 log_info '-------------------------------------'

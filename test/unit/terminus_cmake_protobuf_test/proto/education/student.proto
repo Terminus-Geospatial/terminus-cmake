@@ -1,0 +1,8 @@
+syntax = "proto3"
+
+import "person.proto";
+
+message Student {
+    Person info = 1;
+    repeated string grades = 2;
+}

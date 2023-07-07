@@ -1,0 +1,37 @@
+#    File:    terminus_cmake_util.cmake
+#    Author:  Marvin Smith
+#    Date:    7/6/2023
+#
+#    Purpose:  Utilities for handing CMake calls more elegantly
+#
+cmake_minimum_required( VERSION 3.15 FATAL_ERROR )
+
+include_guard()
+
+message( STATUS "Loading Terminus CMake - Utilities" )
+
+#  terminus_util_get_all_targets
+#
+#  Collects all targets created up to the point the function was invoked. Any
+#  target created in the same directory as, or a subdirectory of, `PROJECT_SOURCE_DIR`
+#  will be included in the value of `_OUTPUT_VAR_`.
+#
+function( terminus_util_get_all_targets _OUTPUT_VAR )
+    set(_TARGETS)
+    terminus_util_get_all_targets_impl( _TARGETS ${PROJECT_SOURCE_DIR} )
+    set( ${_OUTPUT_VAR} ${_TARGETS} PARENT_SCOPE )
+endfunction()
+
+# terminus_util_get_all_targets_impl
+#
+#  Recursive helper function for above function
+#
+macro( terminus_util_get_all_targets_impl _TARGETS _CURRENT_DIR )
+    get_property( _SUBDIRECTORIES DIRECTORY ${_CURRENT_DIR} PROPERTY SUBDIRECTORIES )
+    foreach( _SUBDIR ${_SUBDIRECTORIES} )
+        terminus_util_get_all_targets_impl( ${_TARGETS} ${_SUBDIR} )
+    endforeach()
+
+    get_property( _CURRENT_TARGETS_DIRECTORY ${_CURRENT_DIR} PROPERTY BUILDSYSTEM_TARGETS )
+    list( APPEND ${_TARGETS} ${_CURRENT_TARGETS} )
+endmacro()
