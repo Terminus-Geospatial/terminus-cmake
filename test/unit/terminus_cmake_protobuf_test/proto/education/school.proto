@@ -1,7 +1,7 @@
-syntax "proto3"
+syntax = "proto3";
 
-import "education/student.proto"
-import "education/teacher.proto"
+import "education/student.proto";
+import "education/teacher.proto";
 
 message School {
     repeated Student students = 1;

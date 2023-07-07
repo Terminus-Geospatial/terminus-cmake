@@ -171,10 +171,19 @@ log_info '-------------------------------------'
 #conanfile="${source_root}/conanfile.py"
 conanfile='conanfile.py'
 
+log_info '-------------------------------------'
+log_info "Running Conan Install"
+log_info '-------------------------------------'
 conan install "${conanfile}" ${build_missing} --output-folder build -s build_type=${build_type} ${options[@]}
 
-conan build --output-folder build .
-#conan export-pkg "$conanfile" $channel
+
+log_info '-------------------------------------'
+log_info 'Calling export package'
+log_info '-------------------------------------'
+
+pushd build
+conan export-pkg ../${conanfile}
+popd
 
 log_info '-------------------------------------'
 log_info 'Build Complete'

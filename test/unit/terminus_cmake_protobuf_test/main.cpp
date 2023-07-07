@@ -24,7 +24,7 @@ int main() {
 
     School sc;
     sc.mutable_teachers()->Add(std::move(t));
-    sc.mutable_teachers()->Add(std::move(s));
+    sc.mutable_students()->Add(std::move(s));
 
     return 0;
 }

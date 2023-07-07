@@ -11,7 +11,8 @@ execute_process(
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
-include( "${CMAKE_CURRENT_BINARY_DIR}/conan_paths.cmake" )
+message( "${CMAKE_BINARY_DIR}")
+include( "${CMAKE_BINARY_DIR}/conan_toolchain.cmake" )
 set( CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE )
 
 find_package( Protobuf REQUIRED )
@@ -19,7 +20,8 @@ find_package( gRPC CONFIG REQUIRED )
 
 #  Run function under test
 terminus_protobuf_generate( SOURCES HEADERS LIBS
-    PROTO_PATH "${CMAKE_CURRENT_SOURCE_DIR}/proto"
+    PROTO_PATH
+        "${CMAKE_CURRENT_SOURCE_DIR}/proto"
     PROTO_FILES
         person.proto
         education/student.proto

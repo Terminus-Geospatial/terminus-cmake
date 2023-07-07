@@ -36,7 +36,7 @@ class CMakeConan(ConanFile):
     def package(self):
         cmake = self._configure_cmake()
         cmake.install()
-        pass
+        
 
     def package_info(self):
         self.cpp_info.builddirs = ["cmake"]

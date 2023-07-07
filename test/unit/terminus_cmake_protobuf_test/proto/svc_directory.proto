@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+import "person.proto";
+
+service Directory {
+    rpc GetPerson(GetPersonRequest) returns (GetPersonResponse) {}
+}
+
+message GetPersonRequest {
+    string name = 1;
+}
+
+message GetPersonResponse {
+    Person person = 1;
+}
