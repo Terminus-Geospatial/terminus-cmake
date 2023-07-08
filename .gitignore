@@ -48,4 +48,6 @@ Thumbs.db
 *.mov
 *.wmv
 
+#  Terminus Standards
 build/
+CMakeUserPresets.json

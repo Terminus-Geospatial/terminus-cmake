@@ -168,7 +168,7 @@ log_info "Building ${pkg_ref}"
 log_info '-------------------------------------'
 conanfile='conanfile.py'
 
-conan build --output-folder build conanfile.py
+conan build ${build_missing} --output-folder build conanfile.py
 
 log_info '-------------------------------------'
 log_info "Running Conan Install"
