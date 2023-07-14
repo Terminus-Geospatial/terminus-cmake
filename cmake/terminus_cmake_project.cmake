@@ -10,8 +10,7 @@ message( STATUS "Loading Terminus CMake - Project Init" )
 #  Terminus C++ Warning Flags
 #
 #  General C++ Warning Flags
-set( TERMINUS_CXX_WARNING_FLAGS -Wall -Wextra -pendantic
-      -Wcast-align -Wcast-qual -Wctor-dtor-policy )
+set( TERMINUS_CXX_WARNING_FLAGS -Wall -Wextra -Werror )
 
 #  Terminus CXX Flags
 set( TERMINUS_CXX_FLAGS ${TERMINUS_CXX_WARNING_FLAGS} )
