@@ -3,7 +3,7 @@
 #    Date:    7/5/2023
 #
 
-cmake_minimum_required( VERSION 3.0 FATAL_ERROR )
+cmake_minimum_required( VERSION 3.16 FATAL_ERROR )
 
 project( ${CONAN_PKG_NAME}
             VERSION ${CONAN_PKG_VERSION}
@@ -16,7 +16,12 @@ set( CMAKE_CXX_STANDARD_REQUIRED TRUE )
 
 include( "cmake/terminus_cmake.cmake" )
 
-enable_testing()
-add_subdirectory( test/unit )
+if( TERMINUS_CMAKE_ENABLE_TESTS )
+    message( "Enabling Unit-Tests" )
+    enable_testing()
+    add_subdirectory( test/unit )
+else()
+    message( "Skipping Unit-Tests" )
+endif()
 
 install( DIRECTORY cmake/ DESTINATION cmake )

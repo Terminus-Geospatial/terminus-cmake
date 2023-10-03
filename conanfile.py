@@ -4,13 +4,17 @@ from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps
 class CMakeConan(ConanFile):
 
     name = "terminus_cmake"
-    version = "1.0.0"
+    version = "1.0.1"
 
     license = "Terminus Proprietary"
     author = "Marvin Smith <marvin_smith1@me.com>"
     url = "https://bitbucket.org/msmith81886/terminus-cmake/src/main/"
     description = "Collection of CMake functions and macros for use in Terminus CMake Projects"
     topics = ("terminus", "cmake", "build")
+
+    options = { "with_tests": [True, False] }
+
+    default_options = { "with_tests": True }
 
     settings = "os", "compiler", "build_type", "arch"
 
@@ -25,6 +29,9 @@ class CMakeConan(ConanFile):
         tc.variables["NAME_FROM_CONANFILE"] = self.name
         tc.variables["DESC_FROM_CONANFILE"] = self.description
         tc.variables["URL_FROM_CONANFILE"] = self.url
+
+        print('WITH_TESTS: ', self.options.with_tests )
+        tc.variables["TERMINUS_CMAKE_ENABLE_TESTS"] = self.options.with_tests
         tc.generate()
         
         deps = CMakeDeps(self)

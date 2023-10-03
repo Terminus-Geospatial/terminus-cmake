@@ -168,12 +168,14 @@ log_info "Building ${pkg_ref} (Build-Type: ${build_type})"
 log_info '-------------------------------------'
 conanfile='conanfile.py'
 
-conan build ${build_missing} --output-folder build -s build_type=${build_type} conanfile.py
+conan build ${build_missing} --output-folder build -s build_type=${build_type} ${options[@]} conanfile.py 
 
 log_info '-------------------------------------'
 log_info "Running Conan Install (Build-Type: ${build_type})"
 log_info '-------------------------------------'
-conan install "${conanfile}" ${build_missing} --output-folder build -s build_type=${build_type} ${options[@]}
+CMD="conan install "${conanfile}" ${build_missing} --output-folder build -s build_type=${build_type} ${options[@]}"
+echo "${CMD}"
+$CMD
 
 
 log_info '-------------------------------------'
