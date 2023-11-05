@@ -9,7 +9,10 @@
 set -e
 
 function usage() {
-    echo "usage: $(basename $0) [-h,--help]"
+    echo "usage: $(basename $0) [-h,--help] [-r,--release] [-c,--clean] [-m,--minimal]"
+    echo "                      [-s,--source-root <dir>] [-b,--build-root <dir>] [-v,--verbose]"
+    echo "                      [-x,--no-deploy] [-C,--channel [<channel]] [-B,--build-missing]"
+    echo "                      [-o,--option <conan_pkg_option>]..."
 }
 
 function details() {
@@ -17,6 +20,7 @@ function details() {
     echo "Integrated Build Process.  Some applications and libraries have dependencies managed by the"
     echo "Conan package manager."
     echo
+
 }
 
 function show_help() {
@@ -184,8 +188,45 @@ log_info '-------------------------------------'
 log_info 'Calling export package'
 log_info '-------------------------------------'
 
-conan export-pkg --output-folder build ${conanfile}
+CMD="conan export-pkg --output-folder build ${conanfile}"
+echo ${CMD}
+${CMD}
 
 log_info '-------------------------------------'
 log_info 'Build Complete'
 log_info '-------------------------------------'
+exit 0
+
+#  After a successful compilation, automatically deploy the application if the
+#  Conan recipe defines a 'deploy()' function (unless the user explicitly says
+#  not to deploy).  We only deploy if there is a deploy function so that only
+#  our applications (which conventially provide a deploy method) get deployed.
+#  This prevents unnecessary copies of library package contents into the deployment area.
+#
+deploy_func="$(grep 'def deploy' ${conanfile} || true)"
+if [ ! -z "${deploy_func}" ]; then 
+    if [ "${no_deploy}" == 'true' ]; then
+        log_info "Skipping deployment"
+    else
+        if [ "${build_type}" == 'Release' ]; then
+            options+=("-r")
+        fi
+
+        #  When running the deployment script, we explicitly pass in the reference of the
+        #  package we just build.  We do this as opposed to using the Conan recipt for 2
+        #  reasons:  (1) It makes building the arguments to the deployment script simpler,
+        #  and (2) it prevents us from deploying libraries--or more specificatlly, packages
+        #  without an explicit `deploy` method---which would result in unecessary copies of
+        #  everything the package needs, which would include all packages in it's dependency
+        #  graph.  You could imagine this might take up a lot of disk space unnecessarily,
+        #  which is why we avoid it.
+        log_info "Running deployment script"
+        CMD="${dir_scripts}/conan-deploy.bash ${pkg_ref} ${options[@]}"
+        echo ${CMD}
+        ${CMD}
+    fi
+else
+    log_info "Skipping deployment (no deploy function in recipe)"
+fi
+
+exit 0
