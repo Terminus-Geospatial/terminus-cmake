@@ -14,7 +14,7 @@ class CMakeConan(ConanFile):
 
     options = { "with_tests": [True, False] }
 
-    default_options = { "with_tests": True }
+    default_options = { "with_tests": False }
 
     settings = "os", "compiler", "build_type", "arch"
 
