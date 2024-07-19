@@ -51,3 +51,5 @@ Thumbs.db
 #  Terminus Standards
 build/
 CMakeUserPresets.json
+.vscode
+
