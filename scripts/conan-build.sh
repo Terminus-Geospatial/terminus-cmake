@@ -11,7 +11,7 @@ set -e
 function usage() {
     echo "usage: $(basename $0) [-h,--help] [-r,--release] [-c,--clean] [-m,--minimal]"
     echo "                      [-s,--source-root <dir>] [-b,--build-root <dir>] [-v,--verbose]"
-    echo "                      [-x,--no-deploy] [-C,--channel [<channel]] [-B,--build-missing]"
+    echo "                      [-x,--no-deploy] [-C,--channel [<channel>]] [-B,--build-missing]"
     echo "                      [-o,--option <conan_pkg_option>]..."
 }
 
@@ -32,7 +32,7 @@ function show_help() {
     echo
 }
 
-#  Bring utility scripts within scope
+# Bring the required utilities into scope
 dir_scripts="$(cd "$(dirname "$0")" && pwd)"
 source "$dir_scripts/log.bash"
 
@@ -45,6 +45,7 @@ build_root=''
 force_clean='false'
 options=()
 no_deploy='false'
+no_package=false
 channel=''
 build_missing=''
 
@@ -62,6 +63,10 @@ while [ $# -gt 0 ]; do
             ;;
         -f | --force)
             force_clean='true'
+            ;;
+        -n | --no-package)
+            no_package=true
+            no_deploy='true'
             ;;
         -s | --source-root)
             shift
@@ -86,7 +91,7 @@ while [ $# -gt 0 ]; do
             shift
             if [ -z "$1" ] || [ "${1::1}" == '-' ]; then
                 channel='branches/development'
-                set == "$1" "$@"
+                set -- "$1" "$@"
             else
                 channel="$1"
             fi
@@ -95,7 +100,7 @@ while [ $# -gt 0 ]; do
             build_missing='--build=missing'
             ;;
         *)
-            log_error "Unrecognized option: '$1'"
+            log_error "Unrecognized option '$1'"
             exit 1
             ;;
     esac
@@ -119,7 +124,7 @@ if [ -z "${build_root}" ]; then
 fi
 
 log_info "Source Root: ${source_root}"
-log_info "Build Root:  ${build_root}"
+log_info "Build Root : ${build_root}"
 
 if [ "${clean_build}" == 'true' ]; then
     log_info "Cleaning build root"
@@ -163,32 +168,33 @@ log_info "Using CMake $("${cmd_cmake}" --version | head -1 | awk '{print $3}' )"
 #----------------------------------------#
 source "${dir_scripts}/conan-setup.bash" -m
 
-app_name=$( getAppNameFromConanfileFunc "$source_root" )
+app_name=$(getAppNameFromConanfileFunc "$source_root")
 app_version=$( getAppVersionFromConanfileFunc "${source_root}" )
 pkg_ref="${app_name}/${app_version}@${channel}"
 
 log_info '-------------------------------------'
 log_info "Building ${pkg_ref} (Build-Type: ${build_type})"
 log_info '-------------------------------------'
-conanfile='conanfile.py'
 
-CMD="conan build ${build_missing} --output-folder build -s build_type=${build_type} ${options[@]} conanfile.py"
-echo ${CMD}
-${CMD}
+conanfile='conanfile.py'
 
 log_info '-------------------------------------'
 log_info "Running Conan Install (Build-Type: ${build_type})"
 log_info '-------------------------------------'
-CMD="conan install "${conanfile}" ${build_missing} --output-folder build -s build_type=${build_type} ${options[@]}"
+CMD="conan install ${conanfile} ${build_missing} --output-folder build -s build_type=${build_type} ${options[@]}"
 echo "${CMD}"
 $CMD
+
+CMD="conan build ${build_missing} --output-folder build -s build_type=${build_type} ${options[@]} conanfile.py"
+echo ${CMD}
+${CMD}
 
 
 log_info '-------------------------------------'
 log_info 'Calling export package'
 log_info '-------------------------------------'
 
-CMD="conan export-pkg --output-folder build ${conanfile}"
+CMD="conan export-pkg --output-folder build -s build_type=${build_type} ${conanfile}"
 echo ${CMD}
 ${CMD}
 
