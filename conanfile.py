@@ -4,7 +4,7 @@ from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps
 class CMakeConan(ConanFile):
 
     name = "terminus_cmake"
-    version = "1.0.1"
+    version = "1.0.2"
 
     license = "Terminus Proprietary"
     author = "Marvin Smith <marvin_smith1@me.com>"
@@ -30,10 +30,9 @@ class CMakeConan(ConanFile):
         tc.variables["DESC_FROM_CONANFILE"] = self.description
         tc.variables["URL_FROM_CONANFILE"] = self.url
 
-        print('WITH_TESTS: ', self.options.with_tests )
         tc.variables["TERMINUS_CMAKE_ENABLE_TESTS"] = self.options.with_tests
         tc.generate()
-        
+
         deps = CMakeDeps(self)
         deps.generate()
 
@@ -45,7 +44,8 @@ class CMakeConan(ConanFile):
         cmake = self._configure_cmake()
         cmake.install()
 
-
     def package_info(self):
         self.cpp_info.builddirs = ["cmake"]
 
+    def package_id(self):
+        self.info.clear()
