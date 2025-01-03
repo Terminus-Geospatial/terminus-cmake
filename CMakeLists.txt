@@ -6,13 +6,13 @@ cmake_minimum_required( VERSION 3.16 FATAL_ERROR )
 
 # Set the Project-Name
 project( ${CONAN_PKG_NAME}
-            VERSION ${CONAN_PKG_VERSION}
-            HOMEPAGE_URL ${CONAN_PKG_URL}
-            DESCRIPTION ${CONAN_PKG_DESCRIPTION}
-            LANGUAGES CXX
+         VERSION ${CONAN_PKG_VERSION}
+         HOMEPAGE_URL ${CONAN_PKG_URL}
+         DESCRIPTION ${CONAN_PKG_DESCRIPTION}
+         LANGUAGES CXX
 )
 
-            #  Set C++ 20 Support
+#  Set C++ 23 Support
 set( CMAKE_CXX_STANDARD 23 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 
