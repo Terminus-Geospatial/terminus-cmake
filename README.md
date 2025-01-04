@@ -1,12 +1,8 @@
-Terminus Build System Scripts
-=============================
+Terminus CMake Build System Utilities
+=====================================
 
-Setup
------
-
-Add scripts directory to your `~/.bashrc`. 
-
-    echo ". ${PWD}/scripts" >> "~/.bashrc"
+This repository contains helper CMake scripts for configuring a C++ project.  In particular, it works
+well with the utilities packaged in the [`terminus-setup`](https://github.com/Terminus-Geospatial/terminus-setup) repository.
 
 Special Notes
 -------------
