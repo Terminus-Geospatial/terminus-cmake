@@ -4,7 +4,7 @@ from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps
 class CMakeConan(ConanFile):
 
     name = "terminus_cmake"
-    version = "1.0.5"
+    version = "1.0.6"
 
     license = "Terminus Proprietary"
     author = "Marvin Smith <marvin_smith1@me.com>"
