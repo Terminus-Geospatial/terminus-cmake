@@ -1,3 +1,12 @@
+############################# INTELLECTUAL PROPERTY RIGHTS #############################
+##                                                                                    ##
+##                           Copyright (c) 2024 Terminus LLC                          ##
+##                                All Rights Reserved.                                ##
+##                                                                                    ##
+##          Use of this source code is governed by LICENSE in the repo root.          ##
+##                                                                                    ##
+############################# INTELLECTUAL PROPERTY RIGHTS #############################
+#
 from conan import ConanFile
 from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps
 
@@ -8,7 +17,7 @@ class CMakeConan(ConanFile):
 
     license = "Terminus Proprietary"
     author = "Marvin Smith <marvin_smith1@me.com>"
-    url = "https://bitbucket.org/msmith81886/terminus-cmake/src/main/"
+    url = "https://github.com/Terminus-Geospatial/terminus-cmake"
     description = "Collection of CMake functions and macros for use in Terminus CMake Projects"
     topics = ("terminus", "cmake", "build")
 
@@ -17,6 +26,9 @@ class CMakeConan(ConanFile):
     default_options = { "with_tests": False }
 
     settings = "os", "compiler", "build_type", "arch"
+
+    def build_requirements(self):
+        self.build_requires("cmake/4.0.1")
 
     def _configure_cmake(self):
         cmake = CMake(self)
